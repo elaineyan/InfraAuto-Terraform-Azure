@@ -1,0 +1,53 @@
+name: Destroy - All
+
+on:
+  workflow_call:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+jobs:
+  call-workflow-AKS-Destroy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_destroy.yml@dev
+    secrets: inherit
+  call-workflow-AppGW-Destroy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_destroy.yml@dev
+    secrets: inherit    
+    needs: call-workflow-AKS-Destroy-Dev
+  call-workflow-Core-Destroy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_destroy.yml@dev
+    secrets: inherit
+    needs: call-workflow-AppGW-Destroy-Dev
+
+  call-workflow-AKS-Destroy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_destroy.yml@staging
+    secrets: inherit
+  call-workflow-AppGW-Destroy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_destroy.yml@staging
+    secrets: inherit    
+    needs: call-workflow-AKS-Destroy-Staging
+  call-workflow-Core-Destroy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_destroy.yml@staging
+    secrets: inherit
+    needs: call-workflow-AppGW-Destroy-Staging
+
+  call-workflow-AKS-Destroy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_destroy.yml@prod
+    secrets: inherit
+  call-workflow-AppGW-Destroy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_destroy.yml@prod
+    secrets: inherit    
+    needs: call-workflow-AKS-Destroy-Prod
+  call-workflow-Core-Destroy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_destroy.yml@prod
+    secrets: inherit
+    needs: call-workflow-AppGW-Destroy-Prod
+    

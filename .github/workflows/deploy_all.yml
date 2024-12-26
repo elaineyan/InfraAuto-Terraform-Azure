@@ -1,0 +1,52 @@
+name: Deploy - All
+
+on:
+  workflow_call:
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+  
+jobs:
+  call-workflow-Core-Deploy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_deploy.yml@dev
+    secrets: inherit
+  call-workflow-AppGW-Deploy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_deploy.yml@dev
+    secrets: inherit    
+    needs: call-workflow-Core-Deploy-Dev
+  call-workflow-AKS-Deploy-Dev:
+    if: github.ref == 'refs/heads/dev'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_deploy.yml@dev
+    secrets: inherit
+    needs: call-workflow-AppGW-Deploy-Dev
+
+  call-workflow-Core-Deploy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_deploy.yml@staging
+    secrets: inherit
+  call-workflow-AppGW-Deploy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_deploy.yml@staging
+    secrets: inherit    
+    needs: call-workflow-Core-Deploy-Staging
+  call-workflow-AKS-Deploy-Staging:
+    if: github.ref == 'refs/heads/staging'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_deploy.yml@staging
+    secrets: inherit
+    needs: call-workflow-AppGW-Deploy-Staging
+
+  call-workflow-Core-Deploy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/core_deploy.yml@prod
+    secrets: inherit
+  call-workflow-AppGW-Deploy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/appgw_deploy.yml@prod
+    secrets: inherit    
+    needs: call-workflow-Core-Deploy-Prod
+  call-workflow-AKS-Deploy-Prod:
+    if: github.ref == 'refs/heads/prod'
+    uses: elaineyan/InfraAuto-Terraform-Azure/.github/workflows/aks_deploy.yml@prod
+    secrets: inherit
+    needs: call-workflow-AppGW-Deploy-Prod
